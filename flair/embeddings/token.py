@@ -14,6 +14,7 @@ from bpemb import BPEmb
 from gensim.models import KeyedVectors
 from gensim.models.fasttext import FastTextKeyedVectors, load_facebook_vectors
 from torch import nn
+from transformers import AutoModel, AutoTokenizer
 
 import flair
 from flair.data import Corpus, Dictionary, Sentence, _iter_dataset
@@ -214,8 +215,8 @@ class WordEmbeddings(TokenEmbeddings):
             self.__embedding_length = embedding_length
             vectors = np.zeros((len(self.vocab) + 1, self.__embedding_length), dtype="float")
 
-        self.embedding = nn.Embedding.from_pretrained(torch.FloatTensor(vectors), freeze=not fine_tune)
-
+        self.embedding =  AutoModel.from_pretrained('vinai/phobert-base')
+        
         if stable:
             self.layer_norm: Optional[nn.LayerNorm] = nn.LayerNorm(
                 self.__embedding_length, elementwise_affine=fine_tune
